@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native"
+import { ScrollView, Text } from "react-native"
 import { Card } from "react-native-elements";
 
 const ContactScreen = () => {
@@ -9,12 +9,11 @@ const ContactScreen = () => {
                     Contact Information
                 </Card.Title>
                 <Card.Divider />
-                    <Text>
-                        1 Nucamp Way
-                        Seattle, WA 98001
-                        U.S.A.
-                    </Text>
-                    <Text>
+                    <Text>1 Nucamp Way</Text>
+                    <Text>Seattle, WA 98001</Text>
+                    <Text>U.S.A.</Text>
+                    
+                    <Text style={{ marginBottom: 10 }}>
                         Phone: 1-206-555-1234
                     </Text>
                     <Text >
@@ -22,7 +21,7 @@ const ContactScreen = () => {
                     </Text>
             </Card>
         </ScrollView>
-    )
+    );
 }
 
 export default ContactScreen;
