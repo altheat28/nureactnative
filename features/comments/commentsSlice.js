@@ -15,27 +15,47 @@ export const fetchComments = createAsyncThunk(
     }
 );
 
+export const postComment = createAsyncThunk(
+    'comments/postComment',
+    async (payload, {dispatch, getState}) => {
+        setTimeout(() => {
+            const { comments } = getState(); 
+            const newComment = {
+                ...payload,
+                id: comments.commentsArray.length + 1,
+                date: new Date().toISOString(),
+            }
+            dispatch(addComment(newComment));
+        }, 2000);      
+    }
+);
+
 const commentsSlice = createSlice({
     name: 'comments',
     initialState: { isLoading: true, errMess: null, commentsArray: [] },
-    reducers: {},
-    extraReducers: (builder) => {
-        builder
-            .addCase(fetchComments.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchComments.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.errMess = null;
-                state.commentsArray = action.payload;
-            })
-            .addCase(fetchComments.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errMess = action.error
-                    ? action.error.message
-                    : 'Fetch failed';
-            });
-    }
+    reducers: {
+        extraReducers: (builder) => {
+            builder
+                .addCase(fetchComments.pending, (state) => {
+                    state.isLoading = true;
+                })
+                .addCase(fetchComments.fulfilled, (state, action) => {
+                    state.isLoading = false;
+                    state.errMess = null;
+                    state.commentsArray = action.payload;
+                })
+                .addCase(fetchComments.rejected, (state, action) => {
+                    state.isLoading = false;
+                    state.errMess = action.error
+                        ? action.error.message
+                        : 'Fetch failed';
+                });
+        },
+        addComment: (state, action) => {
+            state.commentsArray.push(action.payload);
+        },
+    },
 });
 
+export const { addComment } = commentsSlice.actions;
 export const commentsReducer = commentsSlice.reducer;
