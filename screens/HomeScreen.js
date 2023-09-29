@@ -1,24 +1,23 @@
-import { ScrollView, Text, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Text, View, Animated } from 'react-native';
 import { Card } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import Loading from '../components/LoadingComponent';
 
 const FeaturedItem = (props) => {
-    const {item} = props;
+    const { item } = props;
 
     if (props.isLoading) {
-        return <Loading />
+        return <Loading />;
     }
-
     if (props.errMess) {
         return (
             <View>
                 <Text>{props.errMess}</Text>
             </View>
-        )
+        );
     }
-
     if (item) {
         return (
             <Card containerStyle={{ padding: 0 }}>
@@ -46,6 +45,12 @@ const HomeScreen = () => {
     const campsites = useSelector((state) => state.campsites);
     const promotions = useSelector((state) => state.promotions);
     const partners = useSelector((state) => state.partners);
+    const scaleValue = useRef(new Animated.Value(0)).current;
+    const scaleAnimation = Animated.timing(scaleValue, {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true
+    });
 
     const featCampsite = campsites.campsitesArray.find((item) => item.featured);
     const featPromotion = promotions.promotionsArray.find(
@@ -53,24 +58,28 @@ const HomeScreen = () => {
     );
     const featPartner = partners.partnersArray.find((item) => item.featured);
 
+    useEffect(() => {
+        scaleAnimation.start();
+    }, []);
+
     return (
-        <ScrollView>
-            <FeaturedItem 
-                item={featCampsite} 
+        <Animated.ScrollView style={{ transform: [{ scale: scaleValue }] }}>
+            <FeaturedItem
+                item={featCampsite}
                 isLoading={campsites.isLoading}
                 errMess={campsites.errMess}
             />
-            <FeaturedItem 
-                item={featPromotion} 
+            <FeaturedItem
+                item={featPromotion}
                 isLoading={promotions.isLoading}
                 errMess={promotions.errMess}
             />
-            <FeaturedItem 
-                item={featPartner} 
+            <FeaturedItem
+                item={featPartner}
                 isLoading={partners.isLoading}
                 errMess={partners.errMess}
             />
-        </ScrollView>
+        </Animated.ScrollView>
     );
 };
 
